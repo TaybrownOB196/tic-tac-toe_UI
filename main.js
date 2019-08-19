@@ -11,9 +11,23 @@ var players = [
 	}
 ];
 
+var crudUrl = 'http://localhost:5000/'
 var isGameOver = false;
 var currentPlayer = players[0];
 var otherPlayer = players[1];
+
+var startGame = function() {
+	var playerName = document.getElementById('playerName').value;
+	var playerPiece = document.getElementById('playerPiece').value;
+	var playerColor = document.getElementById('playerColor').value;
+	createPlayer(playerName, playerPiece, playerColor);
+}
+
+var toggleGameScreen = function() {
+	var temp = document.getElementById('splashScreen').style.display;
+	document.getElementById('splashScreen').style.display = document.getElementById('gameScreen').style.display;
+	document.getElementById('gameScreen').style.display = temp;
+}
 
 var togglePlayer = function() {
 	if(currentPlayer.Piece == 'X') {
@@ -101,4 +115,25 @@ var areSamePiece = function(elements) {
 	{
 		return false;
 	}
+}
+
+var createPlayer = function(name, piece, color) {
+	var playerObj = {
+		'playerName': name,
+		'playerPiece': piece,
+		'playerColor': color
+	};
+	var requestObj = {
+		'method': 'post',
+		//'mode': 'no-cors',
+		'body': JSON.stringify(playerObj)
+	};
+	fetch(crudUrl + 'api/players', requestObj)
+		.then((res) => {
+			toggleGameScreen();
+		})
+		.catch((res) => {
+			console.log('request failed');
+			console.log(res);
+		});
 }

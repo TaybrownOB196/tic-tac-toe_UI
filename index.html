@@ -5,41 +5,51 @@
 		<script src='main.js' type="text/javascript"></script>
 	</head>
 	<body>
-		<div class='board'>
-			<div id='topRow' class='boardRow'>
-				<div onclick='placePiece(this)'></div>
-				<div onclick='placePiece(this)'></div>
-				<div onclick='placePiece(this)'></div>
-			</div>
+		<div id='splashScreen'>
+			<label>Name</label><input id='playerName' type='text'/>
+			<label>Piece</label><input id='playerPiece' type='text'/>
+			<label>Color</label><input id='playerColor' type='text'/>
+			<div id='startGame' class='splashButton' onclick='startGame()'>Start Game</div>
+		</div>
 
-			<div id='middleRow' class='boardRow'>
-				<div onclick='placePiece(this)'></div>
-				<div onclick='placePiece(this)'></div>
-				<div onclick='placePiece(this)'></div>
-			</div>
+		<div id='gameScreen'>
+			<div class='board'>
+				<div id='topRow' class='boardRow'>
+					<div onclick='placePiece(this)'></div>
+					<div onclick='placePiece(this)'></div>
+					<div onclick='placePiece(this)'></div>
+				</div>
 
-			<div id='bottomRow' class='boardRow'>
-				<div onclick='placePiece(this)'></div>
-				<div onclick='placePiece(this)'></div>
-				<div onclick='placePiece(this)'></div>
+				<div id='middleRow' class='boardRow'>
+					<div onclick='placePiece(this)'></div>
+					<div onclick='placePiece(this)'></div>
+					<div onclick='placePiece(this)'></div>
+				</div>
+
+				<div id='bottomRow' class='boardRow'>
+					<div onclick='placePiece(this)'></div>
+					<div onclick='placePiece(this)'></div>
+					<div onclick='placePiece(this)'></div>
+				</div>
+			</div>
+	
+			<div class='footer'>
+				<button onclick='clearBoard()'>Reset!</button>
+				<div id='gameState'>Status:</div>
+				<div id='stats'>
+					<div class='xStats'> Player X 
+						<br/>
+						Wins: <div id='xWins'>0</div>
+						Loses: <div id='xLoses'>0</div>
+					</div>
+					<div class='oStats'> Player O 
+						<br/>
+						Wins: <div id='oWins'>0</div>
+						Loses: <div id='oLoses'>0</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<div class='footer'>
-			<button onclick='clearBoard()'>Clear!</button>
-			<div id='gameState'>Status:</div>
-			<div id='stats'>
-				<div class='xStats'> Player X 
-					<br/>
-					Wins: <div id='xWins'>0</div>
-					Loses: <div id='xLoses'>0</div>
-				</div>
-				<div class='oStats'> Player O 
-					<br/>
-					Wins: <div id='oWins'>0</div>
-					Loses: <div id='oLoses'>0</div>
-				</div>
-			</div>
-		</div>
 	</body>
 </html>
