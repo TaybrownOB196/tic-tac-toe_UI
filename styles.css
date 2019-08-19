@@ -12,9 +12,9 @@ div.boardRow div {
 	text-align: center;
 }
 
-div.boardRow div:hover {
+/* div.boardRow div:hover {
 	background-color: red;
-}
+} */
 
 .board {
 	height: 156px;

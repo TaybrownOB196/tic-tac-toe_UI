@@ -1,20 +1,8 @@
-var players = [
-	{
-		Piece: 'X',
-		Wins: 0,
-		Loses: 0,
-	},
-	{
-		Piece: 'O',
-		Wins: 0,
-		Loses: 0,
-	}
-];
-
+var players = null;
+var defaultColor = '#ffffff'
+var currentScreen = 'splashScreen';
 var crudUrl = 'http://localhost:5000/'
 var isGameOver = false;
-var currentPlayer = players[0];
-var otherPlayer = players[1];
 
 var startGame = function() {
 	var playerName = document.getElementById('playerName').value;
@@ -24,22 +12,19 @@ var startGame = function() {
 }
 
 var toggleGameScreen = function() {
-	var temp = document.getElementById('splashScreen').style.display;
-	document.getElementById('splashScreen').style.display = document.getElementById('gameScreen').style.display;
-	document.getElementById('gameScreen').style.display = temp;
+	if (currentScreen === 'splashScreen') {
+		document.getElementById('splashScreen').style.display = 'none';
+		document.getElementById('gameScreen').style.display = 'block';
+		currentScreen = 'gameScreen';
+	} else {
+		document.getElementById('splashScreen').style.display = 'block';
+		document.getElementById('gameScreen').style.display = 'none';
+		currentScreen = 'splashScreen';
+	}
 }
 
 var togglePlayer = function() {
-	if(currentPlayer.Piece == 'X') {
-		currentPlayer = players[1];
-		otherPlayer = players[0];
-	}
-	else {
-		currentPlayer = players[0];
-		otherPlayer = players[1];
-	}
-
-	return currentPlayer;
+	return players.getNext();
 }
 
 var placePiece = function(element) {
@@ -48,16 +33,28 @@ var placePiece = function(element) {
 			element.innerHTML = togglePlayer().Piece;
 		if(checkHorizontal() || checkVertical() || checkDiagonal()) {
 			isGameOver = true;
-			currentPlayer.Wins++;
-			otherPlayer.Loses++;
-			document.getElementById('xWins').innerHTML = players[0].Wins
-			document.getElementById('xLoses').innerHTML = players[0].Loses
+			//currentPlayer.Wins++;
+			//otherPlayer.Loses++;
+			document.getElementById('xWins').innerHTML = players.item1.Wins
+			document.getElementById('xLoses').innerHTML = players.item1.Loses
 
-			document.getElementById('oWins').innerHTML = players[1].Wins
-			document.getElementById('oLoses').innerHTML = players[1].Loses
+			document.getElementById('oWins').innerHTML = players.item2.Wins
+			document.getElementById('oLoses').innerHTML = players.item2.Loses
 
-			document.getElementById('gameState').innerHTML = 'Player ' + currentPlayer.Piece + ' Wins';
+			document.getElementById('gameState').innerHTML = 'Player ' + players.getCurrent().Piece + ' Wins';
 		}
+	}
+}
+
+var hoverTile = function(event) {
+	if (!isGameOver) {
+		event.toElement.style.backgroundColor = '#' + players.getCurrent().Color;
+	}
+}
+
+var leaveTile = function(event) {
+	if (!isGameOver) {
+		event.target.style.backgroundColor = defaultColor;
 	}
 }
 
@@ -69,6 +66,15 @@ var clearBoard = function() {
 	}
 	document.getElementById('gameState').innerHTML = '';
 	isGameOver = false;
+
+
+}
+var setupBoard = function() {
+	var elements = document.querySelectorAll('div.boardRow div');
+	for(var i=0; i<elements.length; i++) {
+		elements[i].addEventListener("mouseover", hoverTile);
+		elements[i].addEventListener("mouseout", leaveTile);
+	}
 }
 
 var checkHorizontal = function() {
@@ -101,39 +107,23 @@ var checkDiagonal = function() {
 }
 
 var areSamePiece = function(elements) {
+	var p1WinString = players.item1.Piece + players.item1.Piece + players.item1.Piece;
+	var p2WinString = players.item2.Piece + players.item2.Piece + players.item2.Piece;
+
 	var aggregate = '';
 	for(var i=0; i<elements.length; i++) {
 		aggregate += elements[i].innerHTML;
 	}
 
-	if(aggregate == 'OOO' || aggregate == 'XXX') {
+	if(aggregate == p1WinString) {
 		for(var i=0; i<elements.length; i++)
-			elements[i].style.backgroundColor = 'red'
+			elements[i].style.backgroundColor = '#' + players.item1.Color
 		return true;
-	}
-	else
-	{
+	} else if (aggregate == p2WinString) {
+		for(var i=0; i<elements.length; i++)
+			elements[i].style.backgroundColor = '#' + players.item2.Color
+		return true;
+	} else {
 		return false;
 	}
-}
-
-var createPlayer = function(name, piece, color) {
-	var playerObj = {
-		'playerName': name,
-		'playerPiece': piece,
-		'playerColor': color
-	};
-	var requestObj = {
-		'method': 'post',
-		//'mode': 'no-cors',
-		'body': JSON.stringify(playerObj)
-	};
-	fetch(crudUrl + 'api/players', requestObj)
-		.then((res) => {
-			toggleGameScreen();
-		})
-		.catch((res) => {
-			console.log('request failed');
-			console.log(res);
-		});
 }
