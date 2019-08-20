@@ -9,7 +9,7 @@
 	<body>
 		<div id='splashScreen'>
 			<label>Name</label><input id='playerName' type='text'/>
-			<label>Piece</label><input id='playerPiece' type='text'/>
+			<label>Piece</label><input id='playerPiece' type='text' maxlength='1'/>
 			<label>Color</label><input id='playerColor' type='text'/>
 			<div id='startGame' class='splashButton' onclick='startGame()'>Start Game</div>
 		</div>
@@ -37,18 +37,18 @@
 	
 			<div class='footer'>
 				<button onclick='clearBoard()'>Reset!</button>
-				<div id='gameState'>Status:</div>
-				<div id='stats'>
-					<div class='xStats'> Player X 
-						<br/>
-						Wins: <div id='xWins'>0</div>
-						Loses: <div id='xLoses'>0</div>
-					</div>
-					<div class='oStats'> Player O 
-						<br/>
-						Wins: <div id='oWins'>0</div>
-						Loses: <div id='oLoses'>0</div>
-					</div>
+				<div id='gameState'>Playing...</div>
+				<div>
+					<table id='scoreBoardTbl'>
+						<tr>
+							<th>Id</th>
+							<th>PlayerId</th>
+							<th>OpponentId</th>
+							<th>Result</th>
+							<th>SessionId</th>
+							<th>Date</th>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>

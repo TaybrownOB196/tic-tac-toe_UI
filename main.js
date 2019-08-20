@@ -1,4 +1,5 @@
 var players = null;
+var gameResults = [];
 var defaultColor = '#ffffff'
 var currentScreen = 'splashScreen';
 var crudUrl = 'http://localhost:5000/'
@@ -11,16 +12,10 @@ var startGame = function() {
 	createPlayer(playerName, playerPiece, playerColor);
 }
 
-var toggleGameScreen = function() {
-	if (currentScreen === 'splashScreen') {
+var toggleScreen = function(screen) {
 		document.getElementById('splashScreen').style.display = 'none';
-		document.getElementById('gameScreen').style.display = 'block';
-		currentScreen = 'gameScreen';
-	} else {
-		document.getElementById('splashScreen').style.display = 'block';
 		document.getElementById('gameScreen').style.display = 'none';
-		currentScreen = 'splashScreen';
-	}
+		document.getElementById(screen).style.display = 'block';
 }
 
 var togglePlayer = function() {
@@ -33,14 +28,7 @@ var placePiece = function(element) {
 			element.innerHTML = togglePlayer().Piece;
 		if(checkHorizontal() || checkVertical() || checkDiagonal()) {
 			isGameOver = true;
-			//currentPlayer.Wins++;
-			//otherPlayer.Loses++;
-			document.getElementById('xWins').innerHTML = players.item1.Wins
-			document.getElementById('xLoses').innerHTML = players.item1.Loses
-
-			document.getElementById('oWins').innerHTML = players.item2.Wins
-			document.getElementById('oLoses').innerHTML = players.item2.Loses
-
+			createGameResult(new GameResult(players.item1.id, players.item2.id, players.getCurrent().id));
 			document.getElementById('gameState').innerHTML = 'Player ' + players.getCurrent().Piece + ' Wins';
 		}
 	}
@@ -58,6 +46,19 @@ var leaveTile = function(event) {
 	}
 }
 
+var populateScoreBoard = function() {
+	var table = document.getElementById('scoreBoardTbl');
+	for(var i=0;i<gameResults.length;i++) {
+		var row = table.insertRow(i+1);
+		row.insertCell(0).innerHTML = gameResults[i].id;
+		row.insertCell(1).innerHTML = gameResults[i].playerOneId;
+		row.insertCell(2).innerHTML = gameResults[i].playerTwoId;
+		row.insertCell(3).innerHTML = gameResults[i].winnerId;
+		row.insertCell(4).innerHTML = gameResults[i].sessionId;
+		row.insertCell(5).innerHTML = gameResults[i].createDate;
+	}
+}
+
 var clearBoard = function() {
 	var elements = document.querySelectorAll('div.boardRow div');
 	for(var i=0; i<elements.length; i++) {
@@ -66,9 +67,8 @@ var clearBoard = function() {
 	}
 	document.getElementById('gameState').innerHTML = '';
 	isGameOver = false;
-
-
 }
+
 var setupBoard = function() {
 	var elements = document.querySelectorAll('div.boardRow div');
 	for(var i=0; i<elements.length; i++) {

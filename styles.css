@@ -12,10 +12,6 @@ div.boardRow div {
 	text-align: center;
 }
 
-/* div.boardRow div:hover {
-	background-color: red;
-} */
-
 .board {
 	height: 156px;
 	width: 156px;
