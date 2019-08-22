@@ -26,13 +26,13 @@ var togglePlayer = function() {
 var placePiece = function(element) {
 	if(!isGameOver) {
 		if(element.innerHTML == '')
-			element.innerHTML = players.getCurrent().Piece;
+			element.innerHTML = players.getCurrent().playerPiece;
 		if(checkHorizontal() || checkVertical() || checkDiagonal()) {
 			isGameOver = true;
 			var gameResult = new GameResult(players.item1.id, players.item2.id, players.getCurrent().id);
 			console.log(gameResult);
 			createGameResult(gameResult);
-			document.getElementById('gameState').innerHTML = 'Player ' + players.getCurrent().Piece + ' Wins';
+			document.getElementById('gameState').innerHTML = 'Player ' + players.getCurrent().playerPiece + ' Wins';
 		}
 
 		players.getNext();
@@ -41,7 +41,7 @@ var placePiece = function(element) {
 
 var hoverTile = function(event) {
 	if (!isGameOver) {
-		event.toElement.style.backgroundColor = '#' + players.getCurrent().Color;
+		event.toElement.style.backgroundColor = '#' + players.getCurrent().playerColor;
 	}
 }
 
@@ -122,8 +122,8 @@ var checkDiagonal = function() {
 }
 
 var areSamePiece = function(elements) {
-	var p1WinString = players.item1.Piece + players.item1.Piece + players.item1.Piece;
-	var p2WinString = players.item2.Piece + players.item2.Piece + players.item2.Piece;
+	var p1WinString = players.item1.playerPiece + players.item1.playerPiece + players.item1.playerPiece;
+	var p2WinString = players.item2.playerPiece + players.item2.playerPiece + players.item2.playerPiece;
 
 	var aggregate = '';
 	for(var i=0; i<elements.length; i++) {
@@ -132,11 +132,11 @@ var areSamePiece = function(elements) {
 
 	if(aggregate == p1WinString) {
 		for(var i=0; i<elements.length; i++)
-			elements[i].style.backgroundColor = '#' + players.item1.Color
+			elements[i].style.backgroundColor = '#' + players.item1.playerColor
 		return true;
 	} else if (aggregate == p2WinString) {
 		for(var i=0; i<elements.length; i++)
-			elements[i].style.backgroundColor = '#' + players.item2.Color
+			elements[i].style.backgroundColor = '#' + players.item2.playerColor
 		return true;
 	} else {
 		return false;

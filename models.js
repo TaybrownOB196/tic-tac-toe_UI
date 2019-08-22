@@ -1,17 +1,17 @@
 class Player {
     constructor(name, piece, color) {
-        this.Name = name;
-        this.Piece = piece;
-        this.Color = color;
+        this.playerName = name;
+        this.playerPiece = piece;
+        this.playerColor = color;
         this.createDate = new Date();
         this.isActive = true;
     }
 
     fromJson(json) {
         this.id = json['id'];
-        this.Name = json['playerName'];
-        this.Piece = json['playerPiece'];
-        this.Color = json['playerColor'];
+        this.playerName = json['playerName'];
+        this.playerPiece = json['playerPiece'];
+        this.playerColor = json['playerColor'];
         this.createDate = json['createDate'];
         this.isActive = json['isActive'];
         return this;
