@@ -1,9 +1,20 @@
 class Player {
     constructor(name, piece, color) {
-        this.playerId = null;
         this.Name = name;
         this.Piece = piece;
         this.Color = color;
+        this.createDate = new Date();
+        this.isActive = true;
+    }
+
+    fromJson(json) {
+        this.id = json['id'];
+        this.Name = json['playerName'];
+        this.Piece = json['playerPiece'];
+        this.Color = json['playerColor'];
+        this.createDate = json['createDate'];
+        this.isActive = json['isActive'];
+        return this;
     }
 }
 
@@ -12,6 +23,18 @@ class GameResult {
         this.playerOneId = p1Id;
         this.playerTwoId = p2Id;
         this.winnerId = winnerId;
+        this.createDate = new Date();
+        this.isActive = true;
+    }
+
+    fromJson(json) {
+        this.id = json['id'];
+        this.playerOneId = json['playerOneId'];
+        this.playerTwoId = json['playerTwoId'];
+        this.winnerId = json['winnerId'];
+        this.createDate = json['createDate'];
+        this.isActive = json['isActive'];
+        return this;
     }
 }
 

@@ -9,7 +9,8 @@ var startGame = function() {
 	var playerName = document.getElementById('playerName').value;
 	var playerPiece = document.getElementById('playerPiece').value;
 	var playerColor = document.getElementById('playerColor').value;
-	createPlayer(playerName, playerPiece, playerColor);
+	var player = new Player(playerName, playerPiece, playerColor);
+	createPlayer(player);
 }
 
 var toggleScreen = function(screen) {
@@ -25,12 +26,16 @@ var togglePlayer = function() {
 var placePiece = function(element) {
 	if(!isGameOver) {
 		if(element.innerHTML == '')
-			element.innerHTML = togglePlayer().Piece;
+			element.innerHTML = players.getCurrent().Piece;
 		if(checkHorizontal() || checkVertical() || checkDiagonal()) {
 			isGameOver = true;
-			createGameResult(new GameResult(players.item1.id, players.item2.id, players.getCurrent().id));
+			var gameResult = new GameResult(players.item1.id, players.item2.id, players.getCurrent().id);
+			console.log(gameResult);
+			createGameResult(gameResult);
 			document.getElementById('gameState').innerHTML = 'Player ' + players.getCurrent().Piece + ' Wins';
 		}
+
+		players.getNext();
 	}
 }
 
@@ -46,15 +51,25 @@ var leaveTile = function(event) {
 	}
 }
 
+var getScoreBoard = function() {
+	getGameResults(players.item1.id);
+}
+
 var populateScoreBoard = function() {
 	var table = document.getElementById('scoreBoardTbl');
+	var rows = table.getElementsByTagName("tr");
+	for(var i=1; i<rows.length; i++) {
+		//Remove all rows 1 by 1
+		//TODO: Swap table bodies instead
+		rows[i].remove();
+	}
 	for(var i=0;i<gameResults.length;i++) {
 		var row = table.insertRow(i+1);
 		row.insertCell(0).innerHTML = gameResults[i].id;
 		row.insertCell(1).innerHTML = gameResults[i].playerOneId;
-		row.insertCell(2).innerHTML = gameResults[i].playerTwoId;
-		row.insertCell(3).innerHTML = gameResults[i].winnerId;
-		row.insertCell(4).innerHTML = gameResults[i].sessionId;
+		row.insertCell(2).innerHTML = gameResults[i].playerTwoId === -1 ? 'PC' : gameResults[i].sessionId;
+		row.insertCell(3).innerHTML = gameResults[i].winnerId === gameResults[i].playerOneId ? 'W' : 'L';
+		row.insertCell(4).innerHTML = gameResults[i].sessionId === undefined ? 'N/A' : gameResults[i].sessionId;
 		row.insertCell(5).innerHTML = gameResults[i].createDate;
 	}
 }

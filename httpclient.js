@@ -1,17 +1,11 @@
-var createPlayer = function(name, piece, color) {
-	var playerObj = {
-		playerName: name,
-		playerPiece: piece,
-		playerColor: color
-	};
-	//console.log(JSON.stringify(playerObj));
+var createPlayer = function(player) {
 	var requestObj = {
 		method: 'POST',
 		//mode: 'no-cors',
 		headers: {
             'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(playerObj)		
+		body: JSON.stringify(player)		
 	};
 	fetch(crudUrl + 'api/players', requestObj)
 		.then((res) => {
@@ -20,10 +14,11 @@ var createPlayer = function(name, piece, color) {
 			}
 		})
 		.then((json) => {
-			console.log(json);
-			var playerOne = new Player(json['playerName'], json['playerPiece'], json['playerColor']);
-			console.log(playerOne);
-			players = new Pair(playerOne, new Player('PC', 'M', 'ff69b4'))
+			var playerOne = new Player().fromJson(json);
+			var comp = new Player('PC', 'M', 'ff69b4');
+			comp.id = -1;
+
+			players = new Pair(playerOne, comp)
 			toggleScreen('gameScreen');
 			setupBoard();
 		})
@@ -40,9 +35,9 @@ var createGameResult = function(gameResult) {
 		headers: {
             'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(gameResult)		
+		body: JSON.stringify(gameResult)	
 	};
-	fetch(crudUrl + 'api/players', requestObj)
+	fetch(crudUrl + 'api/gameresults', requestObj)
 		.then((res) => {
 			if (res.ok) {
 				console.log(res.json());
@@ -59,15 +54,23 @@ var getGameResults = function(playerId) {
 		method: 'GET',
 		//mode: 'no-cors',	
 	};
-	fetch(crudUrl + 'api/gameresults', requestObj)
+	fetch(crudUrl + 'api/gameresults?playerId=' + playerId, requestObj)
 		.then((res) => {
 			if (res.ok) {
-				return res.json()
+				var json = res.json();
+				console.log(json);
+				return json;
 			}
 		})
 		.then((res) => {
+			var results = [];
+			for(var i=0;i<res.length;i++) {
+				var gameResult = new GameResult().fromJson(res[i]);
+				console.log(gameResult);
+				results.push(gameResult);
+			}
+			gameResults = results;
 			populateScoreBoard();
-			console.log(res);
 		})
 		.catch((res) => {
 			console.log('request failed');
